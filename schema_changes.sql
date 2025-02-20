@@ -5,4 +5,5 @@ CREATE TABLE IF NOT EXISTS projects (
     end_date DATE
 );
 
-ALTER TABLE projects ADD COLUMN budget DECIMAL(10,2);
+-- Check if the 'budget' column exists before adding it
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS budget DECIMAL(10,2);
