@@ -1,0 +1,27 @@
+name: CI/CD for Database Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-database:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install MySQL Client
+        run: sudo apt-get install -y mysql-client
+
+      - name: Run SQL Scripts on AWS RDS
+        env:
+          MYSQL_HOST: ${{ secrets.AWS_RDS_HOST }}
+          MYSQL_USER: ${{ secrets.AWS_RDS_USER }}
+          MYSQL_PASSWORD: ${{ secrets.AWS_RDS_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.AWS_RDS_DATABASE }}
+        run: |
+          mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE < schema_changes.sql
+
